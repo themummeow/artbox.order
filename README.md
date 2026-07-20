@@ -1,1 +1,328 @@
-# artbox.order
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mum Meow - ฟอร์มสั่งผลิต</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap');
+* { box-sizing: border-box; }
+body { margin: 0; padding: 20px; background: #f9f5f7; }
+#order-form-container { font-family:'Sarabun',sans-serif; max-width:550px; margin:0 auto; background:#fff; padding:20px; border-radius:15px; box-shadow:0 5px 15px rgba(118,97,91,0.1); border:1px solid #f1dbf0; color:#444; }
+input, select, button { font-family:'Sarabun',sans-serif !important; }
+.product-item { padding:15px; border:2px solid #f1dbf0; border-radius:10px; margin-bottom:15px; background:#fffcfd; }
+.product-item.error { border-color:#d63384; background:#fff5f8; }
+label { font-weight:600; color:#76615b; font-size:0.9rem; margin-bottom:5px; display:block; margin-top:8px; }
+input, select { width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px; font-size:0.95rem; }
+input:focus, select:focus { outline:none; border-color:#76615b; }
+.btn-add { background:#f1dbf0; color:#76615b; border:none; padding:10px; border-radius:8px; font-weight:600; cursor:pointer; width:100%; margin-bottom:20px; }
+.btn-add:hover { background:#e8c8e6; }
+.btn-remove { background:#f1dbf0; color:#76615b; border:none; padding:8px 12px; border-radius:6px; font-weight:600; cursor:pointer; font-size:0.85rem; margin-top:10px; }
+.btn-remove:hover { background:#e8c8e6; }
+.btn-submit { background:#76615b; color:#fff; border:none; padding:15px; border-radius:25px; font-weight:600; cursor:pointer; width:100%; font-size:1rem; }
+.btn-submit:hover { background:#5c4e47; }
+.btn-submit:disabled { opacity:0.6; cursor:not-allowed; }
+.terms-box { background:#fffcfd; border:1px solid #f1dbf0; padding:15px; border-radius:10px; margin-bottom:20px; color:#76615b; font-size:0.85rem; line-height:1.5; }
+.total-display { font-size:1.3rem; font-weight:bold; color:#d63384; text-align:center; padding:15px; background:#fff0f5; border-radius:10px; border:2px dashed #d63384; margin-bottom:20px; }
+.info-box { background:#fffcfd; border:1px solid #f1dbf0; padding:15px; border-radius:10px; margin-bottom:15px; color:#76615b; font-size:0.9rem; line-height:1.6; }
+.info-box a { color:#d63384; font-weight:bold; text-decoration:none; }
+.info-box a:hover { text-decoration:underline; }
+.payment-info { background:#fffcfd; border:2px solid #f1dbf0; padding:20px; border-radius:12px; margin-bottom:20px; color:#76615b; line-height:1.8; }
+.payment-info div { margin-bottom:8px; }
+/* ── EXTRA INFO BOX ── */
+.extra-info-box { margin-top:4px; margin-bottom:10px; padding:12px 14px; background:#fff8fe; border:1.5px dashed #d63384; border-radius:10px; }
+.extra-info-box .extra-label { font-size:0.82rem; color:#d63384; font-weight:700; margin-bottom:8px; margin-top:0; display:block; }
+.extra-info-box .extra-note { font-size:0.82rem; color:#76615b; margin-bottom:10px; line-height:1.6; }
+.extra-img-wrap { display:block; margin-bottom:10px; text-align:center; text-decoration:none; }
+.extra-img-wrap img { width:100%; max-width:460px; border-radius:8px; border:1px solid #f1dbf0; display:block; margin:0 auto; }
+.extra-img-wrap .img-hint { font-size:0.73rem; color:#aaa; margin-top:4px; }
+.extra-info-box label { margin-top:6px; }
+.extra-info-box input[type="text"] { margin-bottom:0; border-color:#f1a8d0; }
+.extra-info-box input[type="text"]:focus { border-color:#d63384; }
+</style>
+</head>
+<body>
+<div id="order-form-container">
+  <div class="info-box">
+    <div style="margin-bottom:8px;"><strong> งานผลิตโรงงานไทย และบ้านไทย </strong></div>
+    <div style="margin-bottom:8px;"><strong>กรุณาอ่านรายละเอียดก่อนสั่งผลิต:</strong></div>
+    <div style="margin-bottom:8px;"><a href="https://themummeow.carrd.co/#tos" target="_blank">คลิกอ่านที่นี่</a> หากส่งออเดอร์ = ยอมรับเงื่อนไข</div>
+    <div style="margin-bottom:8px;"><strong>เทมเพลตสั่งผลิต:</strong></div>
+    <div style="margin-bottom:8px;"><a href="https://themummeow.carrd.co/#artbox" target="_blank">คลิกอ่านที่นี่</a> หากส่งออเดอร์ = ยอมรับเงื่อนไข</div>
+    <div style="margin-bottom:8px;">ไม่รับงานเร่งผลิตทุกกรณี ใช้เวลาผลิตตามลำดับคิว 5-7 วัน</div>
+    <div style="border-top:1px solid #f1dbf0; padding-top:10px; font-weight:bold;">📁 กรุณานำไฟล์งานลง Google Drive ก่อนกรอกฟอร์ม</div>
+  </div>
+  <label>บัญชี X / Twitter</label>
+  <input type="text" id="twitter" placeholder="@username">
+  <label>ชื่อไลน์ที่แสดง (❌ไม่ใช่ ID)</label>
+  <input type="text" id="line" placeholder="เช่น KitKat🌸🦊6423🧿🪬">
+  <label>ลิงก์ Google Drive (ไฟล์งาน)</label>
+  <input type="text" id="drive_link" placeholder="https://drive.google.com/...">
+  <div id="product-list"></div>
+  <button type="button" class="btn-add" onclick="addProduct()">+ เพิ่มรายการสั่งซื้อ (สูงสุด 3 รายการ)</button>
+  <div class="payment-info">
+    <div style="font-weight:bold; margin-bottom:5px;">จ่ายรอบแรก เฉพาะค่าผลิตสินค้า</div>
+    <div>❌ ยังไม่ต้องชำระค่าจัดส่ง</div>
+    <div style="font-weight:bold; font-size:1.15rem; margin:10px 0;">🏦 082-0-93601-4</div>
+    <div>ธนาคารกรุงไทย KTB</div>
+    <div>- ชิษณุชา / Chitsanucha</div>
+    <div style="font-weight:bold; margin-top:10px;">📌 ทางร้านจะรับคำสั่งซื้อต่อเมื่อโอนชำระแล้ว 📌</div>
+    <div style="color:#d63384;">⚠️ เรียกชำระ 2 รอบ (รอบ 2 ค่าส่งEMS )</div>
+  </div>
+  <div class="total-display">ยอดชำระค่าผลิต (ไม่รวมชิปปิ้ง): <span id="total-amount">0</span> บาท</div>
+  <label>ยอดโอน (บาท)</label>
+  <input type="number" id="pay_amount" placeholder="เช่น 1000">
+  <label>วันที่โอน</label>
+  <input type="date" id="pay_date">
+  <label>เวลาโอน</label>
+  <input type="time" id="pay_time">
+  <div class="terms-box">
+    <div><strong>สั่งชิ้นงานผลิต = ยอมรับเงื่อนไข</strong></div>
+    <div style="margin-top:10px;">หากเปลี่ยนแปลง/ยกเลิก ไม่คืนเงินทุกกรณี</div>
+    <div style="margin-top:8px; font-weight:bold;">❗️ อ่านให้ละเอียด ❗️</div>
+    <ul style="padding-left:20px; margin:8px 0;">
+      <li>1. ไม่เปลี่ยนแปลงขนาดหลังชำระเงิน</li>
+      <li>2. ไม่ยกเลิกการสั่งผลิต (ไม่ว่าเหตุใด)</li>
+      <li>3. ยอมรับกรณีสินค้าไม่ถึงตามกำหนดวัน จะไม่มีการเรียกร้องใดๆ เนื่องจากระยะเวลาการสั่งผลิตของถึงไทยเป็นแค่การคาดการณ์+-วันให้ตามจริง แต่หากเกิดสินค้าติดด่านตรวจจะไม่สามารถดำเนินการใด ๆ ได้</li>
+    </ul>
+    <div style="margin-top:8px;">กรุณาตัดสินใจก่อนสั่งผลิต หากต้องการเพิ่มจำนวนภายหลังกรณีนี้สามารถแจ้งได้ทางไลน์</div>
+  </div>
+  <button class="btn-submit" onclick="sendOrder()">กดส่งข้อมูลผลิต</button>
+</div>
+
+<script>
+const PRICE_DB = {
+  "Art box (คละลายไม่ได้)": { "7x10cm + เข็มกลัก 2.5cm":{"10":200,"20":390} },
+};
+
+const EXTRA_INFO = {
+  "พวงกุญแจอะคริลิค ด้านเดียว": {
+    imgUrl:      "https://i.ibb.co/m5sPrk0d/7.png",
+    imgLink:     "https://ibb.co/xqvrKWYw",
+    note:        "📎 ดูภาพตัวอย่างอะไหล่ด้านบน แล้วระบุเบอร์อะไหล่ที่ต้องการ",
+    label:       "ระบุเบอร์อะไหล่พิเศษ (ถ้ามี)",
+    placeholder: "เช่น no.3",
+    required:    false
+  },
+  "พวงกุญแจห้อยคู่": {
+    imgUrl:      "https://i.ibb.co/m5sPrk0d/7.png",
+    imgLink:     "https://ibb.co/xqvrKWYw",
+    note:        "📎 ดูภาพตัวอย่างอะไหล่ด้านบน แล้วระบุเบอร์อะไหล่ที่ต้องการ\n⚠️ คละลายไม่ได้ — ต้องเป็นลายเดียวกันทั้งหมด",
+    label:       "ระบุเบอร์อะไหล่พิเศษ (ถ้ามี)",
+    placeholder: "เช่น no.3",
+    required:    false
+  },
+  "พวงกุญแจ pudding": {
+    imgUrl:      "https://i.ibb.co/6JZm7fY9/puddin.png",
+    imgLink:     "https://ibb.co/x8sDtRh9",
+    note:        "📎 ดูตัวเลือกสีด้านบน แล้วระบุสีที่ต้องการ\n⚠️ คละลายไม่ได้ — ต้องเป็นลายเดียวกันทั้งหมด",
+    label:       "ระบุสี pudding ที่ต้องการ ✳️",
+    placeholder: "เช่น pink-choco",
+    required:    true
+  },
+  "งานอะคริลิค พิมพ์หน้าหลังคนละลาย": {
+    imgUrl:      "https://i.ibb.co/dsB9Sy76/lilly-keychain.jpg",
+    imgLink:     "https://ibb.co/spjShrtQ",
+    note:        "📎 ดูภาพตัวอย่างด้านบน — งานนี้พิมพ์หน้า-หลังคนละลาย กรุณาระบุรายละเอียด",
+    label:       "ระบุรายละเอียดหน้า-หลัง ✳️",
+    placeholder: "เช่น หน้า: ลาย A / หลัง: ลาย B",
+    required:    true
+  },
+  "ถุงสปัน": {
+    imgUrl:      "https://i.ibb.co/DfWzCsLR/1.png",
+    imgLink:     "https://ibb.co/1GQ7qhbm",
+    note:        "📎 ดูตัวเลือกสีถุงด้านบน แล้วระบุสีที่ต้องการ",
+    label:       "ระบุสีถุงสปัน ✳️",
+    placeholder: "เช่น ถุงขาวหูดำ",
+    required:    true
+  },
+  "ถุง Eco bag 1 Logo": {
+    imgUrl:      "https://i.ibb.co/DH9G4fpM/20250331-204702-72-F77-AF0-B531-4-F42-BA78-86-BC477-BD535.jpg",
+    imgLink:     "https://ibb.co/S4tQNwrm",
+    note:        "📎 ดูตัวเลือกสีถุงด้านบน แล้วระบุสีที่ต้องการ",
+    label:       "ระบุสีถุง Eco bag ✳️",
+    placeholder: "เช่น สีครีม / สีดำ / สีน้ำเงิน",
+    required:    true
+  }
+};
+
+// ⭐ สินค้าคิดราคา "ต่อชิ้น/ต่อใบ" → โชว์ช่องกรอกจำนวนจริงมาคูณ (แก้ชื่อให้ตรง PRICE_DB แล้ว)
+const PER_PIECE = ["ถุง Eco bag 1 Logo","ถุง Eco bag พิมพ์เต็มใบ","เฟรมการ์ด"];
+function isPerPiece(type){ return PER_PIECE.indexOf(type) !== -1; }
+
+let productCount = 0;
+function initForm(){ addProduct(); }
+function getSizeOptions(type){ return PRICE_DB[type] ? Object.keys(PRICE_DB[type]) : []; }
+function getQtyOptions(type,size){ return PRICE_DB[type] && PRICE_DB[type][size] ? Object.keys(PRICE_DB[type][size]) : []; }
+function getPrice(type,size,qty){ if(PRICE_DB[type]&&PRICE_DB[type][size]&&PRICE_DB[type][size][qty]) return PRICE_DB[type][size][qty]; return 0; }
+
+function addProduct(){
+  const container = document.getElementById('product-list');
+  const items = container.getElementsByClassName('product-item');
+  if(items.length >= 3){ alert('สูงสุด 3 รายการ'); return; }
+  productCount++;
+  const pc = productCount;
+  const itemHtml = `
+    <div class="product-item" id="product-${pc}">
+      <div style="font-weight:600; color:#76615b; margin-bottom:10px;">
+        รายการสั่งซื้อที่ ${items.length + 1}
+        ${items.length > 0 ? `<button type="button" class="btn-remove" onclick="removeProduct(${pc})">ลบรายการ</button>` : ''}
+      </div>
+      <label>ประเภทงาน</label>
+      <select class="p-type" onchange="updateSizes(${pc}); updateExtraInfo(${pc}); calculateTotal()">
+        <option value="">-- เลือกประเภทงาน --</option>
+        ${Object.keys(PRICE_DB).map(type => `<option value="${type}">${type}</option>`).join('')}
+      </select>
+      <label>ขนาด</label>
+      <select class="p-size" id="size-${pc}" onchange="updateQtys(${pc}); calculateTotal()">
+        <option value="">-- เลือกประเภทก่อน --</option>
+      </select>
+      <label id="qtylabel-${pc}">จำนวน</label>
+      <select class="p-qty" id="qty-${pc}" onchange="calculateTotal()">
+        <option value="">-- เลือกขนาดก่อน --</option>
+      </select>
+      <div id="unitwrap-${pc}" style="display:none;">
+        <label>จำนวนที่ต้องการ (ใบ/ชิ้น) - นำไปคูณราคาต่อชิ้น</label>
+        <input type="number" class="p-unitqty" min="1" placeholder="เช่น 25" oninput="calculateTotal()">
+      </div>
+      <div id="extra-${pc}" class="extra-info-box" style="display:none;">
+        <span class="extra-label">📋 กรุณาระบุข้อมูลเพิ่มเติม</span>
+        <div id="extra-note-${pc}" class="extra-note"></div>
+        <a id="extra-img-link-${pc}" class="extra-img-wrap" href="#" target="_blank" rel="noopener">
+          <img id="extra-img-${pc}" src="" alt="ภาพประกอบสินค้า" loading="lazy">
+          <div class="img-hint">คลิกที่ภาพเพื่อดูขนาดเต็ม</div>
+        </a>
+        <label id="extra-lbl-${pc}"></label>
+        <input type="text" class="p-extra" id="extra-input-${pc}" placeholder="">
+      </div>
+      <label>อะไหล่พิเศษ (สำหรับพวงกุญแจ) - ชิ้นละ 2 บาท [ไม่บังคับ]</label>
+      <input type="number" class="p-plus" id="plus-${pc}" min="0" placeholder="❗️เฉพาะ สั่งห้อยคู่ไม่ต้องกรอก❗️" oninput="calculateTotal()">
+    </div>`;
+  container.insertAdjacentHTML('beforeend', itemHtml);
+}
+
+function removeProduct(pc){ const it=document.getElementById(`product-${pc}`); if(it) it.remove(); calculateTotal(); }
+
+function updateExtraInfo(pc){
+  const type      = document.querySelector(`#product-${pc} .p-type`).value;
+  const extraBox  = document.getElementById(`extra-${pc}`);
+  const extraImg  = document.getElementById(`extra-img-${pc}`);
+  const extraLink = document.getElementById(`extra-img-link-${pc}`);
+  const extraNote = document.getElementById(`extra-note-${pc}`);
+  const extraLbl  = document.getElementById(`extra-lbl-${pc}`);
+  const extraInp  = document.getElementById(`extra-input-${pc}`);
+  if(EXTRA_INFO[type]){
+    const info = EXTRA_INFO[type];
+    extraImg.src          = info.imgUrl;
+    extraLink.href        = info.imgLink;
+    extraNote.innerHTML   = info.note.replace(/\n/g, '<br>');
+    extraLbl.textContent  = info.label;
+    extraInp.placeholder  = info.placeholder;
+    extraInp.value        = '';
+    extraInp.style.borderColor = '';
+    extraBox.style.display = 'block';
+  } else {
+    extraBox.style.display = 'none';
+    if(extraInp) extraInp.value = '';
+  }
+}
+
+function updateSizes(pc){
+  const type = document.querySelector(`#product-${pc} .p-type`).value;
+  const sizeSelect = document.getElementById(`size-${pc}`);
+  const qtySelect  = document.getElementById(`qty-${pc}`);
+  const sizes = getSizeOptions(type);
+  sizeSelect.innerHTML = sizes.length>0 ? `<option value="">-- เลือกขนาด --</option>${sizes.map(s=>`<option value="${s}">${s}</option>`).join('')}` : '<option value="">-- ไม่มีข้อมูล --</option>';
+  qtySelect.innerHTML = '<option value="">-- เลือกขนาดก่อน --</option>';
+  document.getElementById(`unitwrap-${pc}`).style.display = 'none';
+  calculateTotal();
+}
+
+function updateQtys(pc){
+  const type     = document.querySelector(`#product-${pc} .p-type`).value;
+  const size     = document.getElementById(`size-${pc}`).value;
+  const qtySelect = document.getElementById(`qty-${pc}`);
+  const qtyLabel  = document.getElementById(`qtylabel-${pc}`);
+  const unitWrap  = document.getElementById(`unitwrap-${pc}`);
+  const qtys = getQtyOptions(type,size);
+  if(isPerPiece(type)){ qtyLabel.textContent='เรตราคา (ต่อชิ้น/ใบ)'; unitWrap.style.display='block'; }
+  else { qtyLabel.textContent='จำนวน'; unitWrap.style.display='none'; }
+  qtySelect.innerHTML = qtys.length>0 ? `<option value="">-- เลือก --</option>${qtys.map(q=>`<option value="${q}">${q}${isPerPiece(type)?' (ราคา/ชิ้น)':''}</option>`).join('')}` : '<option value="">-- ไม่มีข้อมูล --</option>';
+  calculateTotal();
+}
+
+function calculateTotal(){
+  let grandTotal = 0;
+  document.querySelectorAll('.product-item').forEach(item=>{
+    const type=item.querySelector('.p-type').value, size=item.querySelector('.p-size').value, qty=item.querySelector('.p-qty').value;
+    const plus=parseInt(item.querySelector('.p-plus').value)||0;
+    const unitEl=item.querySelector('.p-unitqty'), unitQty=parseInt(unitEl?unitEl.value:0)||0;
+    if(type&&size&&qty){ const unitPrice=getPrice(type,size,qty); const price=isPerPiece(type)?unitPrice*unitQty:unitPrice; grandTotal+=price+(plus*2); item.classList.remove('error'); }
+    else if(type||size||qty){ item.classList.add('error'); }
+    else if(plus>0){ grandTotal+=plus*2; item.classList.remove('error'); }
+  });
+  document.getElementById('total-amount').textContent=grandTotal.toLocaleString('th-TH');
+}
+
+function sendOrder(){
+  const btn=document.querySelector('.btn-submit');
+  const twitter=document.getElementById('twitter').value.trim(), line=document.getElementById('line').value.trim(), drive_link=document.getElementById('drive_link').value.trim();
+  const pay_amount=document.getElementById('pay_amount').value.trim(), pay_date=document.getElementById('pay_date').value, pay_time=document.getElementById('pay_time').value;
+  const items=document.querySelectorAll('.product-item');
+  let itemsValid=true;
+  if(!twitter||!line||!drive_link){ alert('กรุณากรอก Twitter, ชื่อไลน์, และ Google Drive Link'); return; }
+  if(!pay_amount||!pay_date||!pay_time){ alert('กรุณากรอกข้อมูลการโอน (ยอดโอน, วันที่, เวลา)'); return; }
+  items.forEach(item=>{
+    const type=item.querySelector('.p-type').value, size=item.querySelector('.p-size').value, qty=item.querySelector('.p-qty').value;
+    const unitEl=item.querySelector('.p-unitqty');
+    const extraBox=item.querySelector('.extra-info-box'), extraInp=item.querySelector('.p-extra');
+    const extraVisible=extraBox&&extraBox.style.display!=='none';
+    if(!type||!size||!qty){ itemsValid=false; item.classList.add('error'); }
+    if(isPerPiece(type)&&(!unitEl||!parseInt(unitEl.value))){ itemsValid=false; item.classList.add('error'); }
+    if(extraVisible&&extraInp&&EXTRA_INFO[type]&&EXTRA_INFO[type].required&&!extraInp.value.trim()){
+      itemsValid=false; item.classList.add('error'); extraInp.style.borderColor='#d63384';
+    } else if(extraInp){ extraInp.style.borderColor=''; }
+  });
+  if(!itemsValid){ alert('กรุณากรอกรายละเอียดให้ครบ รวมถึงจำนวนที่ต้องการ (สินค้าคิดต่อชิ้น) และข้อมูลสี/เบอร์อะไหล่ของสินค้าที่มีเครื่องหมาย ✳️'); return; }
+
+  btn.disabled=true; btn.textContent='กำลังส่ง...';
+
+  const data=new URLSearchParams();
+  data.append('timestamp',new Date().toISOString()); data.append('twitter',twitter); data.append('line',line); data.append('drive_link',drive_link);
+  data.append('pay_amount',pay_amount); data.append('pay_date',pay_date); data.append('pay_time',pay_time); data.append('count',items.length);
+  items.forEach((item,index)=>{
+    const type=item.querySelector('.p-type').value, size=item.querySelector('.p-size').value, qty=item.querySelector('.p-qty').value;
+    const plus=parseInt(item.querySelector('.p-plus').value)||0;
+    const unitEl=item.querySelector('.p-unitqty'), unitQty=parseInt(unitEl?unitEl.value:0)||0;
+    const extraInp=item.querySelector('.p-extra'), extraVal=extraInp?extraInp.value.trim():'';
+    const unitPrice=getPrice(type,size,qty), price=isPerPiece(type)?unitPrice*unitQty:unitPrice, plusPrice=plus*2;
+    const qtyText=isPerPiece(type)?(unitQty+' ชิ้น (เรต '+qty+')'):qty;
+    data.append(`product_${index}_type`,type); data.append(`product_${index}_size`,size); data.append(`product_${index}_qty`,qtyText);
+    data.append(`product_${index}_price`,price); data.append(`product_${index}_plus`,plus); data.append(`product_${index}_plus_price`,plusPrice);
+    data.append(`product_${index}_total`,price+plusPrice);
+    if(extraVal) data.append(`product_${index}_extra`,extraVal);
+  });
+
+  // ── ส่งข้อมูล (keepalive กันข้อมูลหลุดตอนเปลี่ยนหน้า/เปิดไลน์) ──
+  try {
+    fetch('https://script.google.com/macros/s/AKfycby_YnPJKNp6pnkbZpQFLd4NYGjaZiXB7mS0M-MGGp9MXN-L1fQ-gwximMIgU4mNZEHC/exec',{method:'POST',mode:'no-cors',body:data,keepalive:true});
+  } catch(err){ console.error('Error:',err); }
+
+  // ── เคลียร์ฟอร์ม ──
+  document.getElementById('twitter').value=''; document.getElementById('line').value=''; document.getElementById('drive_link').value='';
+  document.getElementById('pay_amount').value=''; document.getElementById('pay_date').value=''; document.getElementById('pay_time').value='';
+  document.getElementById('product-list').innerHTML=''; productCount=0; addProduct(); calculateTotal();
+
+  // ── เปิดไลน์ทันทีในจังหวะกดปุ่ม (กันมือถือบล็อก) + fallback ──
+  var lineUrl="https://lin.ee/uCgrQOK";
+  var w=window.open(lineUrl,"_blank");
+  alert('✅ ส่งข้อมูลเรียบร้อย!\n\n❗️ ส่งสลิปการโอนทางไลน์เพื่อยืนยันการผลิต\n(ถ้าไลน์ไม่เปิดอัตโนมัติ กดปุ่มติดต่อไลน์ที่หน้าเว็บได้เลย)');
+  if(!w){ window.location.href=lineUrl; }
+
+  btn.disabled=false; btn.textContent='กดส่งข้อมูลผลิต';
+}
+
+window.addEventListener('DOMContentLoaded', initForm);
+</script>
+</body>
+</html>
