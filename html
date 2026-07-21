@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Mum Meow - ฟอร์มสั่งผลิต</title>
+<title>@the_mum_meow - ฟอร์มสั่งผลิต</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap');
 * { box-sizing: border-box; }
@@ -44,6 +45,9 @@ input:focus, select:focus { outline:none; border-color:#76615b; }
 <body>
 <div id="order-form-container">
   <div class="info-box">
+    <div style="text-align:center; margin-bottom:8px;">
+      <img src="https://i.ibb.co/LXgSzL8G/pnglogo.png" alt="@the_mum_meow" style="max-width:160px; border-radius:8px;">
+    </div>
     <div style="margin-bottom:8px;"><strong> งานผลิตโรงงานไทย และบ้านไทย </strong></div>
     <div style="margin-bottom:8px;"><strong>กรุณาอ่านรายละเอียดก่อนสั่งผลิต:</strong></div>
     <div style="margin-bottom:8px;"><a href="https://themummeow.carrd.co/#tos" target="_blank">คลิกอ่านที่นี่</a> หากส่งออเดอร์ = ยอมรับเงื่อนไข</div>
@@ -67,7 +71,7 @@ input:focus, select:focus { outline:none; border-color:#76615b; }
     <div>ธนาคารกรุงไทย KTB</div>
     <div>- ชิษณุชา / Chitsanucha</div>
     <div style="font-weight:bold; margin-top:10px;">📌 ทางร้านจะรับคำสั่งซื้อต่อเมื่อโอนชำระแล้ว 📌</div>
-    <div style="color:#d63384;">⚠️ เรียกชำระ 2 รอบ (รอบ 2 ค่าส่งEMS )</div>
+    <div style="color:#d63384;">⚠️ เรียกชำระ 2 รอบ (รอบ 2 ค่าส่ง EMS)</div>
   </div>
   <div class="total-display">ยอดชำระค่าผลิต (ไม่รวมชิปปิ้ง): <span id="total-amount">0</span> บาท</div>
   <label>ยอดโอน (บาท)</label>
@@ -92,62 +96,23 @@ input:focus, select:focus { outline:none; border-color:#76615b; }
 
 <script>
 const PRICE_DB = {
-  "Art box (คละลายไม่ได้)": { "7x10cm + เข็มกลัก 2.5cm":{"10":200,"20":390} },
-};
-
-const EXTRA_INFO = {
-  "พวงกุญแจอะคริลิค ด้านเดียว": {
-    imgUrl:      "https://i.ibb.co/m5sPrk0d/7.png",
-    imgLink:     "https://ibb.co/xqvrKWYw",
-    note:        "📎 ดูภาพตัวอย่างอะไหล่ด้านบน แล้วระบุเบอร์อะไหล่ที่ต้องการ",
-    label:       "ระบุเบอร์อะไหล่พิเศษ (ถ้ามี)",
-    placeholder: "เช่น no.3",
-    required:    false
+  "Artbox": { "7x10cm + เข็มกลัด 2.5cm":{"10":200,"20":390} },
+  "Sticker UV DTF (ไม่ตัดแบ่ง)": {
+    "3 cm":{"50":160,"100":230,"200":300},
+    "4 cm":{"50":180,"100":260,"200":350},
+    "5 cm":{"50":200,"100":300,"200":400}
   },
-  "พวงกุญแจห้อยคู่": {
-    imgUrl:      "https://i.ibb.co/m5sPrk0d/7.png",
-    imgLink:     "https://ibb.co/xqvrKWYw",
-    note:        "📎 ดูภาพตัวอย่างอะไหล่ด้านบน แล้วระบุเบอร์อะไหล่ที่ต้องการ\n⚠️ คละลายไม่ได้ — ต้องเป็นลายเดียวกันทั้งหมด",
-    label:       "ระบุเบอร์อะไหล่พิเศษ (ถ้ามี)",
-    placeholder: "เช่น no.3",
-    required:    false
-  },
-  "พวงกุญแจ pudding": {
-    imgUrl:      "https://i.ibb.co/6JZm7fY9/puddin.png",
-    imgLink:     "https://ibb.co/x8sDtRh9",
-    note:        "📎 ดูตัวเลือกสีด้านบน แล้วระบุสีที่ต้องการ\n⚠️ คละลายไม่ได้ — ต้องเป็นลายเดียวกันทั้งหมด",
-    label:       "ระบุสี pudding ที่ต้องการ ✳️",
-    placeholder: "เช่น pink-choco",
-    required:    true
-  },
-  "งานอะคริลิค พิมพ์หน้าหลังคนละลาย": {
-    imgUrl:      "https://i.ibb.co/dsB9Sy76/lilly-keychain.jpg",
-    imgLink:     "https://ibb.co/spjShrtQ",
-    note:        "📎 ดูภาพตัวอย่างด้านบน — งานนี้พิมพ์หน้า-หลังคนละลาย กรุณาระบุรายละเอียด",
-    label:       "ระบุรายละเอียดหน้า-หลัง ✳️",
-    placeholder: "เช่น หน้า: ลาย A / หลัง: ลาย B",
-    required:    true
-  },
-  "ถุงสปัน": {
-    imgUrl:      "https://i.ibb.co/DfWzCsLR/1.png",
-    imgLink:     "https://ibb.co/1GQ7qhbm",
-    note:        "📎 ดูตัวเลือกสีถุงด้านบน แล้วระบุสีที่ต้องการ",
-    label:       "ระบุสีถุงสปัน ✳️",
-    placeholder: "เช่น ถุงขาวหูดำ",
-    required:    true
-  },
-  "ถุง Eco bag 1 Logo": {
-    imgUrl:      "https://i.ibb.co/DH9G4fpM/20250331-204702-72-F77-AF0-B531-4-F42-BA78-86-BC477-BD535.jpg",
-    imgLink:     "https://ibb.co/S4tQNwrm",
-    note:        "📎 ดูตัวเลือกสีถุงด้านบน แล้วระบุสีที่ต้องการ",
-    label:       "ระบุสีถุง Eco bag ✳️",
-    placeholder: "เช่น สีครีม / สีดำ / สีน้ำเงิน",
-    required:    true
+  "Sticker UV DTF แผ่นใหญ่ (ไม่ตัดแบ่ง)": {
+    "3x3 นิ้ว":{"20":250,"50":540,"100":950},
+    "A7":{"20":280,"50":680,"100":1200},
+    "A6":{"20":400,"50":950,"100":1800}
   }
 };
 
-// ⭐ สินค้าคิดราคา "ต่อชิ้น/ต่อใบ" → โชว์ช่องกรอกจำนวนจริงมาคูณ (แก้ชื่อให้ตรง PRICE_DB แล้ว)
-const PER_PIECE = ["ถุง Eco bag 1 Logo","ถุง Eco bag พิมพ์เต็มใบ","เฟรมการ์ด"];
+const EXTRA_INFO = {};
+
+// ⭐ สินค้าคิดราคา "ต่อชิ้น/ต่อใบ" → โชว์ช่องกรอกจำนวนจริงมาคูณ
+const PER_PIECE = [];
 function isPerPiece(type){ return PER_PIECE.indexOf(type) !== -1; }
 
 let productCount = 0;
@@ -195,8 +160,6 @@ function addProduct(){
         <label id="extra-lbl-${pc}"></label>
         <input type="text" class="p-extra" id="extra-input-${pc}" placeholder="">
       </div>
-      <label>อะไหล่พิเศษ (สำหรับพวงกุญแจ) - ชิ้นละ 2 บาท [ไม่บังคับ]</label>
-      <input type="number" class="p-plus" id="plus-${pc}" min="0" placeholder="❗️เฉพาะ สั่งห้อยคู่ไม่ต้องกรอก❗️" oninput="calculateTotal()">
     </div>`;
   container.insertAdjacentHTML('beforeend', itemHtml);
 }
@@ -255,11 +218,9 @@ function calculateTotal(){
   let grandTotal = 0;
   document.querySelectorAll('.product-item').forEach(item=>{
     const type=item.querySelector('.p-type').value, size=item.querySelector('.p-size').value, qty=item.querySelector('.p-qty').value;
-    const plus=parseInt(item.querySelector('.p-plus').value)||0;
     const unitEl=item.querySelector('.p-unitqty'), unitQty=parseInt(unitEl?unitEl.value:0)||0;
-    if(type&&size&&qty){ const unitPrice=getPrice(type,size,qty); const price=isPerPiece(type)?unitPrice*unitQty:unitPrice; grandTotal+=price+(plus*2); item.classList.remove('error'); }
+    if(type&&size&&qty){ const unitPrice=getPrice(type,size,qty); const price=isPerPiece(type)?unitPrice*unitQty:unitPrice; grandTotal+=price; item.classList.remove('error'); }
     else if(type||size||qty){ item.classList.add('error'); }
-    else if(plus>0){ grandTotal+=plus*2; item.classList.remove('error'); }
   });
   document.getElementById('total-amount').textContent=grandTotal.toLocaleString('th-TH');
 }
@@ -283,7 +244,7 @@ function sendOrder(){
       itemsValid=false; item.classList.add('error'); extraInp.style.borderColor='#d63384';
     } else if(extraInp){ extraInp.style.borderColor=''; }
   });
-  if(!itemsValid){ alert('กรุณากรอกรายละเอียดให้ครบ รวมถึงจำนวนที่ต้องการ (สินค้าคิดต่อชิ้น) และข้อมูลสี/เบอร์อะไหล่ของสินค้าที่มีเครื่องหมาย ✳️'); return; }
+  if(!itemsValid){ alert('กรุณากรอกรายละเอียดให้ครบ รวมถึงจำนวนที่ต้องการ และข้อมูลเพิ่มเติมของสินค้าที่มีเครื่องหมาย ✳️'); return; }
 
   btn.disabled=true; btn.textContent='กำลังส่ง...';
 
@@ -292,20 +253,18 @@ function sendOrder(){
   data.append('pay_amount',pay_amount); data.append('pay_date',pay_date); data.append('pay_time',pay_time); data.append('count',items.length);
   items.forEach((item,index)=>{
     const type=item.querySelector('.p-type').value, size=item.querySelector('.p-size').value, qty=item.querySelector('.p-qty').value;
-    const plus=parseInt(item.querySelector('.p-plus').value)||0;
     const unitEl=item.querySelector('.p-unitqty'), unitQty=parseInt(unitEl?unitEl.value:0)||0;
     const extraInp=item.querySelector('.p-extra'), extraVal=extraInp?extraInp.value.trim():'';
-    const unitPrice=getPrice(type,size,qty), price=isPerPiece(type)?unitPrice*unitQty:unitPrice, plusPrice=plus*2;
+    const unitPrice=getPrice(type,size,qty), price=isPerPiece(type)?unitPrice*unitQty:unitPrice;
     const qtyText=isPerPiece(type)?(unitQty+' ชิ้น (เรต '+qty+')'):qty;
     data.append(`product_${index}_type`,type); data.append(`product_${index}_size`,size); data.append(`product_${index}_qty`,qtyText);
-    data.append(`product_${index}_price`,price); data.append(`product_${index}_plus`,plus); data.append(`product_${index}_plus_price`,plusPrice);
-    data.append(`product_${index}_total`,price+plusPrice);
+    data.append(`product_${index}_price`,price); data.append(`product_${index}_total`,price);
     if(extraVal) data.append(`product_${index}_extra`,extraVal);
   });
 
   // ── ส่งข้อมูล (keepalive กันข้อมูลหลุดตอนเปลี่ยนหน้า/เปิดไลน์) ──
   try {
-    fetch('https://script.google.com/macros/s/AKfycbw2H8_XxPoSbt0YmgzwfiamBaXQwwxLNdW1oSKKHC_anZ-3HW380vEEhch4Gjuvef_sBA/exec',{method:'POST',mode:'no-cors',body:data,keepalive:true});
+    fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE',{method:'POST',mode:'no-cors',body:data,keepalive:true});
   } catch(err){ console.error('Error:',err); }
 
   // ── เคลียร์ฟอร์ม ──
