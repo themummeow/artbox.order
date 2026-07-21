@@ -28,6 +28,8 @@ input:focus, select:focus { outline:none; border-color:#76615b; }
 .info-box { background:#fffcfd; border:1px solid #f1dbf0; padding:15px; border-radius:10px; margin-bottom:15px; color:#76615b; font-size:0.9rem; line-height:1.6; }
 .info-box a { color:#d63384; font-weight:bold; text-decoration:none; }
 .info-box a:hover { text-decoration:underline; }
+.info-subbox { background:#fffcfd; border:1px solid #f1dbf0; border-radius:10px; padding:12px 15px; margin-bottom:12px; color:#76615b; font-size:0.9rem; line-height:1.6; }
+.info-subbox:last-of-type { margin-bottom:12px; }
 .payment-info { background:#fffcfd; border:2px solid #f1dbf0; padding:20px; border-radius:12px; margin-bottom:20px; color:#76615b; line-height:1.8; }
 .payment-info div { margin-bottom:8px; }
 /* ── EXTRA INFO BOX ── */
@@ -49,11 +51,18 @@ input:focus, select:focus { outline:none; border-color:#76615b; }
       <img src="https://i.ibb.co/LXgSzL8G/pnglogo.png" alt="@the_mum_meow" style="max-width:160px; border-radius:8px;">
     </div>
     <div style="margin-bottom:8px;"><strong> งานผลิตโรงงานไทย และบ้านไทย </strong></div>
-    <div style="margin-bottom:8px;"><strong>กรุณาอ่านรายละเอียดก่อนสั่งผลิต:</strong></div>
-    <div style="margin-bottom:8px;"><a href="https://themummeow.carrd.co/#tos" target="_blank">คลิกอ่านที่นี่</a> หากส่งออเดอร์ = ยอมรับเงื่อนไข</div>
-    <div style="margin-bottom:8px;"><strong>เทมเพลตสั่งผลิต:</strong></div>
-    <div style="margin-bottom:8px;"><a href="https://themummeow.carrd.co/#artbox" target="_blank">คลิกอ่านที่นี่</a> หากส่งออเดอร์ = ยอมรับเงื่อนไข</div>
-    <div style="margin-bottom:8px;">ไม่รับงานเร่งผลิตทุกกรณี ใช้เวลาผลิตตามลำดับคิว 5-7 วัน</div>
+
+    <div class="info-subbox">
+      <div style="margin-bottom:8px;"><strong>กรุณาอ่านรายละเอียดก่อนสั่งผลิต:</strong></div>
+      <div><a href="https://themummeow.carrd.co/#tos" target="_blank">คลิกอ่านที่นี่</a> หากส่งออเดอร์ = ยอมรับเงื่อนไข</div>
+    </div>
+
+    <div class="info-subbox">
+      <div style="margin-bottom:8px;"><strong>เทมเพลตสั่งผลิต:</strong></div>
+      <div style="margin-bottom:8px;"><a href="https://themummeow.carrd.co/#artbox" target="_blank">คลิกอ่านที่นี่</a> หากส่งออเดอร์ = ยอมรับเงื่อนไข</div>
+      <div>ไม่รับงานเร่งผลิตทุกกรณี ใช้เวลาผลิตตามลำดับคิว 5-7 วัน</div>
+    </div>
+
     <div style="border-top:1px solid #f1dbf0; padding-top:10px; font-weight:bold;">📁 กรุณานำไฟล์งานลง Google Drive ก่อนกรอกฟอร์ม</div>
   </div>
   <label>บัญชี X / Twitter</label>
@@ -264,7 +273,7 @@ function sendOrder(){
 
   // ── ส่งข้อมูล (keepalive กันข้อมูลหลุดตอนเปลี่ยนหน้า/เปิดไลน์) ──
   try {
-    fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE',{method:'POST',mode:'no-cors',body:data,keepalive:true});
+    fetch('https://script.google.com/macros/s/AKfycbw2H8_XxPoSbt0YmgzwfiamBaXQwwxLNdW1oSKKHC_anZ-3HW380vEEhch4Gjuvef_sBA/exec',{method:'POST',mode:'no-cors',body:data,keepalive:true});
   } catch(err){ console.error('Error:',err); }
 
   // ── เคลียร์ฟอร์ม ──
