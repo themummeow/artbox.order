@@ -152,7 +152,11 @@ const PRICE_DB = {
     "แพค 2 ชิ้น (5cm+3cm)": { "10 set": 190, "20 set": 300 },
     "แพค 3 ชิ้น (5cm+4cm+3cm)": { "10 set": 220, "20 set": 380 }
     },
- 
+
+  "keychain nfc (เลือกจำนวนเอง)": {
+  "4-5cm": { "1ชิ้น": 19}
+ },
+
   "Sticker UV DTF แบบดวง (ไม่ตัดแบ่ง)": {
     "3 cm": { "50": 160, "100": 230, "200": 300 },
     "4 cm": { "50": 180, "100": 260, "200": 350 },
@@ -187,6 +191,16 @@ const EXTRA_INFO = {};
 const PER_PIECE = [];
 function isPerPiece(type){ return PER_PIECE.indexOf(type) !== -1; }
 
+// ================================================================
+// ⭐ keychain nfc แบบเลือกจำนวนเอง + เลือกกรอบ
+// ================================================================
+const NFC_FREE_TYPE = "keychain nfc (เลือกจำนวนเอง)";
+const NFC_UNIT_PRICE = 19; // ⚠️ ใส่ราคาต่อชิ้น (ตอนนี้ยังเป็น 0)
+const NFC_FRAMES = [
+  { name: "กรอบที่ 1", img: "https://ibb.co/spsByXZx" },   // ⚠️ ใส่ URL ภาพในช่อง img
+  { name: "กรอบที่ 2", img: "https://ibb.co/mfPLQZf" }
+];
+
 let productCount = 0;
 function initForm(){ addProduct(); }
 function getSizeOptions(type){ return PRICE_DB[type] ? Object.keys(PRICE_DB[type]) : []; }
@@ -206,11 +220,11 @@ function addProduct(){
         ${items.length > 0 ? `<button type="button" class="btn-remove" onclick="removeProduct(${pc})">ลบรายการ</button>` : ''}
       </div>
       <label>ประเภทงาน</label>
-      <select class="p-type" onchange="updateSizes(${pc}); updateExtraInfo(${pc}); calculateTotal()">
+      <select class="p-type" onchange="updateSizes(${pc}); updateExtraInfo(${pc}); updateNfc(${pc}); calculateTotal()">
         <option value="">-- เลือกประเภทงาน --</option>
-        ${Object.keys(PRICE_DB).map(type => `<option value="${type}">${type}</option>`).join('')}
+        ${[...Object.keys(PRICE_DB), NFC_FREE_TYPE].map(type => `<option value="${type}">${type}</option>`).join('')}
       </select>
-      <label>ขนาด</label>
+      <label id="sizelabel-${pc}">ขนาด</label>
       <select class="p-size" id="size-${pc}" onchange="updateQtys(${pc}); calculateTotal()">
         <option value="">-- เลือกประเภทก่อน --</option>
       </select>
@@ -218,6 +232,16 @@ function addProduct(){
       <select class="p-qty" id="qty-${pc}" onchange="calculateTotal()">
         <option value="">-- เลือกขนาดก่อน --</option>
       </select>
+      <div id="nfc-${pc}" style="display:none;">
+        <label>กรอบพวงกุญแจ</label>
+        <select class="p-frame" id="frame-${pc}" onchange="updateNfcImg(${pc}); calculateTotal()">
+          <option value="">-- เลือกกรอบ --</option>
+          ${NFC_FRAMES.map((f,i) => `<option value="${i}">${f.name}</option>`).join('')}
+        </select>
+        <img id="frame-img-${pc}" src="" alt="ภาพกรอบ" style="display:none; width:100%; max-width:300px; border-radius:8px; margin-bottom:10px;">
+        <label>จำนวนที่ต้องการ (ชิ้น)</label>
+        <input type="number" class="p-nfcqty" id="nfcqty-${pc}" min="1" placeholder="เช่น 25" oninput="calculateTotal()">
+      </div>
       <div id="unitwrap-${pc}" style="display:none;">
         <label>จำนวนที่ต้องการ (ใบ/ชิ้น) - นำไปคูณราคาต่อชิ้น</label>
         <input type="number" class="p-unitqty" min="1" placeholder="เช่น 25" oninput="calculateTotal()">
@@ -237,6 +261,32 @@ function addProduct(){
 }
 
 function removeProduct(pc){ const it=document.getElementById(`product-${pc}`); if(it) it.remove(); calculateTotal(); }
+
+// ⭐ แสดง/ซ่อนช่อง keychain nfc
+function updateNfc(pc){
+  const type = document.querySelector(`#product-${pc} .p-type`).value;
+  const isNfc = type === NFC_FREE_TYPE;
+  document.getElementById(`nfc-${pc}`).style.display = isNfc ? 'block' : 'none';
+  document.getElementById(`sizelabel-${pc}`).style.display = isNfc ? 'none' : 'block';
+  document.getElementById(`size-${pc}`).style.display = isNfc ? 'none' : 'block';
+  document.getElementById(`qtylabel-${pc}`).style.display = isNfc ? 'none' : 'block';
+  document.getElementById(`qty-${pc}`).style.display = isNfc ? 'none' : 'block';
+  if(isNfc){
+    document.getElementById(`unitwrap-${pc}`).style.display = 'none';
+    document.getElementById(`frame-${pc}`).value = '';
+    document.getElementById(`nfcqty-${pc}`).value = '';
+    updateNfcImg(pc);
+  }
+}
+
+// ⭐ แสดงภาพกรอบที่เลือก
+function updateNfcImg(pc){
+  const idx = document.getElementById(`frame-${pc}`).value;
+  const img = document.getElementById(`frame-img-${pc}`);
+  const frame = idx !== '' ? NFC_FRAMES[parseInt(idx)] : null;
+  if(frame && frame.img){ img.src = frame.img; img.style.display = 'block'; }
+  else { img.src = ''; img.style.display = 'none'; }
+}
 
 function updateExtraInfo(pc){
   const type      = document.querySelector(`#product-${pc} .p-type`).value;
@@ -289,7 +339,15 @@ function updateQtys(pc){
 function calculateTotal(){
   let grandTotal = 0;
   document.querySelectorAll('.product-item').forEach(item=>{
-    const type=item.querySelector('.p-type').value, size=item.querySelector('.p-size').value, qty=item.querySelector('.p-qty').value;
+    const type=item.querySelector('.p-type').value;
+    if(type===NFC_FREE_TYPE){
+      const n=parseInt(item.querySelector('.p-nfcqty').value)||0;
+      const frame=item.querySelector('.p-frame').value;
+      if(n>0 && frame!==''){ grandTotal+=n*NFC_UNIT_PRICE; item.classList.remove('error'); }
+      else if(n>0 || frame!==''){ item.classList.add('error'); }
+      return;
+    }
+    const size=item.querySelector('.p-size').value, qty=item.querySelector('.p-qty').value;
     const unitEl=item.querySelector('.p-unitqty'), unitQty=parseInt(unitEl?unitEl.value:0)||0;
     if(type&&size&&qty){ const unitPrice=getPrice(type,size,qty); const price=isPerPiece(type)?unitPrice*unitQty:unitPrice; grandTotal+=price; item.classList.remove('error'); }
     else if(type||size||qty){ item.classList.add('error'); }
@@ -313,7 +371,14 @@ function sendOrder(){
   if(!twitter||!line||!drive_link){ alert('กรุณากรอก Twitter, ชื่อไลน์, และ Google Drive Link'); return; }
   if(!pay_amount||!pay_date||!pay_time){ alert('กรุณากรอกข้อมูลการโอน (ยอดโอน, วันที่, เวลา)'); return; }
   items.forEach(item=>{
-    const type=item.querySelector('.p-type').value, size=item.querySelector('.p-size').value, qty=item.querySelector('.p-qty').value;
+    const type=item.querySelector('.p-type').value;
+    if(type===NFC_FREE_TYPE){
+      const n=parseInt(item.querySelector('.p-nfcqty').value)||0;
+      const frame=item.querySelector('.p-frame').value;
+      if(!n || frame===''){ itemsValid=false; item.classList.add('error'); }
+      return;
+    }
+    const size=item.querySelector('.p-size').value, qty=item.querySelector('.p-qty').value;
     const unitEl=item.querySelector('.p-unitqty');
     const extraBox=item.querySelector('.extra-info-box'), extraInp=item.querySelector('.p-extra');
     const extraVisible=extraBox&&extraBox.style.display!=='none';
@@ -331,7 +396,16 @@ function sendOrder(){
   data.append('timestamp',new Date().toISOString()); data.append('twitter',twitter); data.append('line',line); data.append('drive_link',drive_link);
   data.append('pay_amount',pay_amount); data.append('pay_date',pay_date); data.append('pay_time',pay_time); data.append('count',items.length);
   items.forEach((item,index)=>{
-    const type=item.querySelector('.p-type').value, size=item.querySelector('.p-size').value, qty=item.querySelector('.p-qty').value;
+    const type=item.querySelector('.p-type').value;
+    if(type===NFC_FREE_TYPE){
+      const n=parseInt(item.querySelector('.p-nfcqty').value)||0;
+      const frameName=NFC_FRAMES[parseInt(item.querySelector('.p-frame').value)].name;
+      const price=n*NFC_UNIT_PRICE;
+      data.append(`product_${index}_type`,type); data.append(`product_${index}_size`,frameName); data.append(`product_${index}_qty`,n+' ชิ้น');
+      data.append(`product_${index}_price`,price); data.append(`product_${index}_total`,price);
+      return;
+    }
+    const size=item.querySelector('.p-size').value, qty=item.querySelector('.p-qty').value;
     const unitEl=item.querySelector('.p-unitqty'), unitQty=parseInt(unitEl?unitEl.value:0)||0;
     const extraInp=item.querySelector('.p-extra'), extraVal=extraInp?extraInp.value.trim():'';
     const unitPrice=getPrice(type,size,qty), price=isPerPiece(type)?unitPrice*unitQty:unitPrice;
