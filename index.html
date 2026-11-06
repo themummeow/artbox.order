@@ -92,7 +92,7 @@ input:focus, select:focus { outline:none; border-color:#76615b; }
     <div style="text-align:center; margin-bottom:8px;">
       <img src="https://i.ibb.co/LXgSzL8G/pnglogo.png" alt="@the_mum_meow" style="max-width:160px; border-radius:8px;">
     </div>
-    <div style="margin-bottom:8px;"><strong> งานผลิตโรงงานไทย Lot.016 ตัดรอบทุกศุกร์ 6 พ.ย.18.00 ส่งศุกร์ 13 พ.ย. </strong></div>
+    <div style="margin-bottom:8px;"><strong> งานผลิตโรงงานไทย Lot.017 ตัดรอบทุกศุกร์ 13 พ.ย.18.00 ส่งศุกร์ 13 พ.ย. </strong></div>
 
     <div class="info-subbox">
       <div style="margin-bottom:8px;"><strong>กรุณาอ่านรายละเอียดก่อนสั่งผลิต:</strong></div>
@@ -416,7 +416,7 @@ function sendOrder(){
   });
 
   // ── ส่งข้อมูลไป Google Sheet ──
-  fetch('https://script.google.com/macros/s/AKfycbxPL1NnxWhXEXAEOdJVUzoZrdqPrKXNs7S-SfdgzFgLdtBKotcQK_u5Y87KITkZrgQymw/exec',{method:'POST',mode:'no-cors',body:data,keepalive:true})
+  fetch('https://script.google.com/macros/s/AKfycbwncE-4QMtKdW45HlqdM73sp7ztX1qWc7IMw2ekA_JarI9ge9_Vm6m5Gs6XgxpAZZyWag/exec',{method:'POST',mode:'no-cors',body:data,keepalive:true})
     .catch(err=>console.error('Error:',err))
     .finally(()=>{
       // ── เคลียร์ฟอร์ม ──
